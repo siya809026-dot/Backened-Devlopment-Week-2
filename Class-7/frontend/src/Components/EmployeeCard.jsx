@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./EmployeeCard.css";
 import { createuser, getuser, deleteuser, updateuser } from "../api";
 
 const EmployeeCard = () => {
@@ -122,7 +123,7 @@ const EmployeeCard = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Employee System App</h1>
 
       <form onSubmit={submitHandler}>
@@ -133,8 +134,7 @@ const EmployeeCard = () => {
           value={newUser.name}
           onChange={changeHandler}
         />
-        <br />
-        <br />
+        
 
         <input
           type="email"
@@ -143,8 +143,7 @@ const EmployeeCard = () => {
           value={newUser.email}
           onChange={changeHandler}
         />
-        <br />
-        <br />
+        
 
         <input
           type="text"
@@ -153,34 +152,46 @@ const EmployeeCard = () => {
           value={newUser.empId}
           onChange={changeHandler}
         />
-        <br />
-        <br />
+    
 
         <button type="submit">
           {isEdit ? "Update" : "Create"}
         </button>
       </form>
 
-      <hr />
+      
 
       <h2>Employee List</h2>
   {users.map((item, i) => {
   return (
-    <div
+    <div className="card"
       key={i}
-      style={{
-        border: "1px solid black",
-        margin: "10px",
-        padding: "10px",
-        color: "red",
-      }}
+     style={{
+  background: "#fff",
+  padding: "20px",
+  marginBottom: "15px",
+  borderRadius: "12px",
+  border: "1px solid #e2e8f0",
+  boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+}}
     >
       <h3>{item.name}</h3>
       <p>{item.email}</p>
       <p>{item.empId}</p>
 
-      <button onClick={() => deleteHandler(item._id)}>Delete</button>
-      <button onClick={() => editHandler(item)}>Edit</button>
+      <button
+  className="delete-btn"
+  onClick={() => deleteHandler(item._id)}
+>
+  Delete
+</button>
+
+<button
+  className="edit-btn"
+  onClick={() => editHandler(item)}
+>
+  Edit
+</button>
     </div>
   );
 })}
