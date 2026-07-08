@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { createuser, getuser } from "../api";
+import { createuser, getuser, deleteuser, updateuser } from "../api";
 
 const EmployeeCard = () => {
   const [users, setUsers] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [userid, setUserId] = useState("");
 
   const [newUser, setNewUser] = useState({
     name: "",
@@ -42,7 +45,60 @@ const EmployeeCard = () => {
       const response = await axios.post(createuser, newUser);
       console.log(response.data);
 
-      getUserData();
+      await getUserData();
+
+      setNewUser({
+        name: "",
+        email: "",
+        empId: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Delete User
+  async function deleteHandler(userid) {
+    try {
+      console.log(userid);
+
+      const response = await axios.delete(`${deleteuser}/${userid}`);
+
+      console.log(response.data);
+
+      await getUserData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Edit User
+  function editHandler(user) {
+    console.log(user);
+
+    setUserId(user._id);
+    setIsEdit(true);
+
+    setNewUser({
+      name: user.name,
+      email: user.email,
+      empId: user.empId,
+    });
+  }
+
+  // Update User
+  async function updatedUser() {
+    try {
+      const response = await axios.put(
+        `${updateuser}/${userid}`,
+        newUser
+      );
+
+      console.log(response.data);
+
+      await getUserData();
+
+      setIsEdit(false);
 
       setNewUser({
         name: "",
@@ -57,7 +113,12 @@ const EmployeeCard = () => {
   // Form Submit
   function submitHandler(e) {
     e.preventDefault();
-    createUser();
+
+    if (isEdit) {
+      updatedUser();
+    } else {
+      createUser();
+    }
   }
 
   return (
@@ -95,28 +156,34 @@ const EmployeeCard = () => {
         <br />
         <br />
 
-        <button type="submit">Submit</button>
+        <button type="submit">
+          {isEdit ? "Update" : "Create"}
+        </button>
       </form>
 
       <hr />
 
       <h2>Employee List</h2>
+  {users.map((item, i) => {
+  return (
+    <div
+      key={i}
+      style={{
+        border: "1px solid black",
+        margin: "10px",
+        padding: "10px",
+        color: "red",
+      }}
+    >
+      <h3>{item.name}</h3>
+      <p>{item.email}</p>
+      <p>{item.empId}</p>
 
-      {users.map((user) => (
-        <div
-          key={user._id}
-          style={{
-            border: "1px solid black",
-            margin: "10px",
-            padding: "10px",
-            color:"red",
-          }}
-        >
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
-          <p>{user.empId}</p>
-        </div>
-      ))}
+      <button onClick={() => deleteHandler(item._id)}>Delete</button>
+      <button onClick={() => editHandler(item)}>Edit</button>
+    </div>
+  );
+})}
     </div>
   );
 };

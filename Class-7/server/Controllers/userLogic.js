@@ -92,10 +92,9 @@ const updateUser = async(req,res)=>{
     }
 }
 
-
-
 const deleteUser = async (req,res)=>{
     try {
+        console.log('object')
         const {userid} = req.params
 
        let deleteduser = await  User.findByIdAndDelete(userid)
@@ -109,7 +108,7 @@ const deleteUser = async (req,res)=>{
     } catch (error) {
         res.status(500).json({
             success:false,
-            message:'failed to delete user'
+            message:'failed to delete user',error
         })
     }
 
