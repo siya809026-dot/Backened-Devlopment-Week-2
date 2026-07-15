@@ -1,6 +1,7 @@
 import express from 'express'
 
 const app = express()
+import cors from "cors"
 
 import connectDb from './database/mongodb.js'
 import router from './routes/routes.js'
@@ -8,6 +9,9 @@ import router from './routes/routes.js'
 const port = 4000
 
 app.use(express.json())
+app.use(cors({
+    origin:"*"
+}))
 
 app.use(router)
 
